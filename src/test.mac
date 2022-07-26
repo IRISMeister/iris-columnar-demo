@@ -1,0 +1,52 @@
+ROUTINE test
+#define LOOPCOUNT 10000000
+#define SAMPLECOUNT 10
+
+	W "Populating data... will take a while...",!
+	//&SQL(TRUNCATE TABLE abc)
+	Do ##class(abc).%KillExtent()
+	for i=1:1:$$$LOOPCOUNT {
+		&SQL(INSERT INTO abc (int1,int2) VALUES (:i,:i))
+	}
+
+	Set sql="SELECT ""global"",allocatedMB,usedMB FROM bdb_sql.TableSize('abc')"
+	Set tStatement = ##class(%SQL.Statement).%New()
+  	Set qStatus = tStatement.%Prepare(sql)
+  	Set rset = tStatement.%Execute()
+  	Do rset.%Display()
+	w !
+
+	W "selecting data...",!
+
+	#; cache them and remember the answer.
+	&SQL(SELECT SUM(int1) INTO :sum FROM abc)
+	Set rightanswer=sum
+	w rightanswer,!
+
+	Set elapsed=0
+	For i=1:1:$$$SAMPLECOUNT {
+		Set st=$ZH
+		&SQL(SELECT SUM(int1) INTO :sum FROM abc)
+		if (sum'=rightanswer) { W "wrong answer! " b }
+		Set en=$ZH-st
+		Set elapsed=elapsed+en
+	}
+	w "Normal column",!
+	w elapsed/$$$SAMPLECOUNT,!
+
+	#; cache them and remember the answer.
+	&SQL(SELECT SUM(int2) INTO :sum FROM abc)
+	Set rightanswer=sum
+
+	Set elapsed=0
+	For i=1:1:$$$SAMPLECOUNT {
+		Set st=$ZH
+		&SQL(SELECT SUM(int2) INTO :sum FROM abc)
+		if (sum'=rightanswer) { W "wrong answer! " b }
+		Set en=$ZH-st
+		Set elapsed=elapsed+en
+	}
+	w "Columnar column",!
+	w elapsed/$$$SAMPLECOUNT,!
+
+	Return

@@ -1,0 +1,2 @@
+ROUTINE loadtaxi [ type = mac]
+ do ##class(NYTaxi.Utils).Load("/home/irisowner/taxi/data")

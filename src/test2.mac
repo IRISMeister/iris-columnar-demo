@@ -1,0 +1,37 @@
+ROUTINE test2
+
+	Set sql="SELECT branch,SUM(int1) s FROM test group by branch"
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set qStatus = tStatement.%Prepare(sql)
+	Set rset = tStatement.%Execute()
+
+	Set nst=$ZH
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set qStatus = tStatement.%Prepare(sql)
+	Set rset = tStatement.%Execute()
+  	While rset.%Next() {
+		Set dummy=rset.s
+	}
+	Set nel=$ZH-nst
+
+	Set sql="SELECT branch,SUM(int2) s FROM test group by branch"
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set qStatus = tStatement.%Prepare(sql)
+	Set rset = tStatement.%Execute()
+
+	Set cst=$ZH
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set qStatus = tStatement.%Prepare(sql)
+	Set rset = tStatement.%Execute()
+  	While rset.%Next() {
+		Set dummy=rset.s
+	}	
+	Set cel=$ZH-cst
+
+	w "Normal column",!
+	w nel,!
+	w "Columnar column",!
+	w cel,!
+
+	w "Ratio nel/cel:"_(nel/cel),!
+	Return

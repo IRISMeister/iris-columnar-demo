@@ -1,0 +1,16 @@
+[Startup]
+PasswordHash=FBFE8593AEFA510C27FD184738D6E865A441DE98,u4ocm4qh
+SystemMode=TEST
+WebServer=1
+[config]
+globals=0,0,1024,0,0,0
+routines=128
+
+[SQL]
+SaveMAC=1
+
+[Actions]
+CreateDatabase:Name=MYAPP,Directory=/home/irisowner/MYAPP
+CreateNamespace:Name=MYAPP,Globals=MYAPP,Routines=MYAPP
+CreateDatabase:Name=NYTAXI,Directory=/home/irisowner/NYTAXI
+CreateNamespace:Name=NYTAXI,Globals=NYTAXI,Routines=NYTAXI

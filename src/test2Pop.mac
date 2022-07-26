@@ -1,0 +1,20 @@
+ROUTINE test2Pop
+#define LOOPCOUNT 10000000
+
+	W "Populating data... will take a while...",!
+	Set basets="2022-01-01 00:00:00"
+	//&SQL(TRUNCATE TABLE %NOCHECK %NOLOCK test)
+	Do ##class(test).%KillExtent()
+	for i=1:1:$$$LOOPCOUNT {
+		Set branch=##class(%Library.PopulateUtils).String(2)
+		Set ts=$SYSTEM.SQL.Functions.DATEADD("s",i,basets)
+		&SQL(INSERT INTO test (ts,int1,int2,branch) VALUES (:ts,:i,:i,:branch))
+	}
+
+	Set sql="SELECT ""global"",allocatedMB,usedMB FROM bdb_sql.TableSize('test')"
+	Set tStatement = ##class(%SQL.Statement).%New()
+  	Set qStatus = tStatement.%Prepare(sql)
+  	Set rset = tStatement.%Execute()
+  	Do rset.%Display() w !
+
+	Return

@@ -13,6 +13,16 @@ ClassMethod Truncate() As %Status
 
 ClassMethod Load(directory As %String, pattern = "*.csv") As %Status
 {
+    ;Disable IRISAUDIT JournalSwitch or iris-community edition will stop responding by exceeding the max limit db size (10GB) very quickly.
+    New $NAMESPACE
+    Set ns=$NAMESPACE
+    Set $NAMESPACE="%SYS"
+    Set tSC=##class(Security.Events).Get("%System","%System","JournalChange",.p)
+    Merge orgprop=p
+    Set p("Enabled")=0
+    Set tSC=##class(Security.Events).Modify("%System","%System","JournalChange",.p)
+    Set $NAMESPACE=ns
+
     do ..Start()
     set sc = $$$OK
     try {
@@ -59,6 +69,11 @@ ClassMethod Load(directory As %String, pattern = "*.csv") As %Status
         set sc = ex.AsStatus()
     }
     do ..Stop(sc)
+
+    ; restore it
+    Set $NAMESPACE="%SYS"
+    Set tSC=##class(Security.Events).Modify("%System","%System","JournalChange",.orgprop)
+
     quit sc
 }
 

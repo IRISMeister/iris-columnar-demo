@@ -27,9 +27,6 @@ $ python3 test.py
 ```
 
 ## NYTAXI 
-
-Disable IRISAUDIT JournalSwitch or iris-community edition will stop responding by exceeding the max limit db size (10GB).
-
 Get 2020 Yellow Taxi Trip Data from https://data.cityofnewyork.us/Transportation/2020-Yellow-Taxi-Trip-Data/kxp8-n2sj
 
 ```

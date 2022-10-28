@@ -5,9 +5,12 @@ ROUTINE test
 	W "Populating data... will take a while...",!
 	//&SQL(TRUNCATE TABLE abc)
 	Do ##class(abc).%KillExtent()
+	Set st=$ZH
 	for i=1:1:$$$LOOPCOUNT {
 		&SQL(INSERT INTO abc (int1,int2) VALUES (:i,:i))
+		if (i#($$$LOOPCOUNT/100)=0) { Write i_"/"_$$$LOOPCOUNT,!}
 	}
+	w "Elapsed time in sec."_($ZH-st),!
 
 	Set sql="SELECT ""global"",allocatedMB,usedMB FROM bdb_sql.TableSize('abc')"
 	Set tStatement = ##class(%SQL.Statement).%New()

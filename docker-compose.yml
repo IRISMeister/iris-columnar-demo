@@ -2,7 +2,7 @@ version: '3.7'
 #
 services:
   iris:
-    image: containers.intersystems.com/intersystems/iris-community:2022.2.0.368.0
+    image: containers.intersystems.com/intersystems/iris-community:2022.3.0.589.0
     init: true
     hostname: iris
 
